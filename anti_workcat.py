@@ -95,9 +95,26 @@ DIALOGUES = {
 }
 
 PRODUCTIVE_KEYWORDS = [
-    "visual studio", "vs code", "code", "terminal", "powershell", "cmd", 
-    "sublime", "pycharm", "intellij", "eclipse", "overleaf", "word", "excel", 
-    "powerpoint", "notion", "figma", "github"
+    # IDEs & Code Editors
+    "visual studio", "vs code", "code", "sublime", "pycharm", "intellij",
+    "eclipse", "cursor", "cursor ai", "android studio", "atom", "vim", "neovim",
+    # Terminals & Shells
+    "terminal", "powershell", "cmd", "command prompt", "windows terminal",
+    # Coding / Competitive Programming Websites (browser tab titles)
+    "geeksforgeeks", "geeks for geeks", "leetcode", "hackerrank", "hacker rank",
+    "codechef", "codeforces", "topcoder", "codewars", "exercism",
+    "w3schools", "stackoverflow", "stack overflow", "github", "gitlab", "bitbucket",
+    # AI Assistants (study / coding help)
+    "claude", "claude ai", "chatgpt", "chat gpt", "openai", "gemini", "copilot",
+    "perplexity", "bard",
+    # PDF / Documents in browser or reader
+    ".pdf", "pdf", "adobe acrobat", "acrobat reader", "foxit",
+    # Office & Productivity Apps
+    "overleaf", "word", "excel", "powerpoint", "notion", "figma",
+    "google docs", "google sheets", "google slides",
+    # Study / Learning Platforms
+    "coursera", "udemy", "edx", "khan academy", "codecademy", "freecodecamp",
+    "brilliant", "mit opencourseware", "nptel",
 ]
 
 DISTRACTION_KEYWORDS = [
