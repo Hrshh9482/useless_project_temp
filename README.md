@@ -78,7 +78,7 @@ N/A (Software Project)
 
 ### Project Demo
 # Video
-[Add your demo video link here]
+[🎥 Watch the Project Demo](./demou.mp4)
 *Demonstrates active tab detection, UI Automation target walking, tab closing (Ctrl+W), sleeping when idle, and giggling with meow audio when clicked*
 
 # Additional Demos
