@@ -10,9 +10,8 @@
 
 
 ### Team Members
-- Team Lead: [Name] - [College]
-- Member 2: [Name] - [College]
-- Member 3: [Name] - [College]
+- Team Lead: Vaishnavi P B - LBSITW
+- Member 2: Harsha Hari - LBSITW
 
 ### Project Description
 [2-3 lines about what your project does]
