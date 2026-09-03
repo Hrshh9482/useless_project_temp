@@ -2,11 +2,11 @@
 
 
 
-# [Project Name] 🎯
+# TechHack 🎯
 
 
 ## Basic Details
-### Team Name: [Name]
+### Team Name: TechHack
 
 
 ### Team Members
