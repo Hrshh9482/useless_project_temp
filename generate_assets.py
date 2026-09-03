@@ -26,16 +26,72 @@ def draw_pixel(draw, x, y, color):
     draw.rectangle([x * SCALE, y * SCALE, (x + 1) * SCALE - 1, (y + 1) * SCALE - 1], fill=color)
 
 def draw_cat(pose="idle"):
+    if pose == "sleep":
+        img, draw = create_base_canvas()
+        # Curled sleeping cat
+        # Tail wrapped around base
+        for x in range(1, 4):
+            draw_pixel(draw, x, 12, ORANGE)
+        draw_pixel(draw, 1, 11, WHITE)
+        
+        # Low sleeping body
+        for x in range(3, 8):
+            for y in range(9, 13):
+                draw_pixel(draw, x, y, ORANGE)
+        for x in range(8, 13):
+            for y in range(9, 13):
+                draw_pixel(draw, x, y, WHITE)
+        draw_pixel(draw, 11, 12, ORANGE)
+        
+        # Low Head resting
+        for x in range(7, 13):
+            for y in range(6, 9):
+                draw_pixel(draw, x, y, ORANGE if x <= 8 else WHITE)
+        
+        # Ears (lying back)
+        draw_pixel(draw, 6, 5, ORANGE)
+        draw_pixel(draw, 7, 5, PINK)
+        draw_pixel(draw, 12, 5, PINK)
+        draw_pixel(draw, 13, 5, WHITE)
+        
+        # Closed sleeping eyes (- -)
+        draw_pixel(draw, 9, 7, BLACK)
+        draw_pixel(draw, 10, 7, BLACK)
+        draw_pixel(draw, 12, 7, BLACK)
+        draw_pixel(draw, 13, 7, BLACK)
+        draw_pixel(draw, 11, 8, PINK) # Nose
+        
+        # Collar
+        for x in range(8, 11):
+            draw_pixel(draw, x, 8, RED_COLLAR)
+            
+        # Zzz floating bubbles
+        # Small z
+        draw_pixel(draw, 9, 3, (180, 220, 255, 255))
+        draw_pixel(draw, 10, 3, (180, 220, 255, 255))
+        draw_pixel(draw, 9, 4, (180, 220, 255, 255))
+        draw_pixel(draw, 9, 5, (180, 220, 255, 255))
+        draw_pixel(draw, 10, 5, (180, 220, 255, 255))
+        # Big Z
+        draw_pixel(draw, 12, 0, (180, 220, 255, 255))
+        draw_pixel(draw, 13, 0, (180, 220, 255, 255))
+        draw_pixel(draw, 14, 0, (180, 220, 255, 255))
+        draw_pixel(draw, 13, 1, (180, 220, 255, 255))
+        draw_pixel(draw, 12, 2, (180, 220, 255, 255))
+        draw_pixel(draw, 13, 2, (180, 220, 255, 255))
+        draw_pixel(draw, 14, 2, (180, 220, 255, 255))
+        return img
+
     img, draw = create_base_canvas()
     
     # Tail (upright with white tip)
     tail_x = 2
     tail_y_start = 9
-    if pose == "sit":
-        # Tail curled back
-        for y in range(7, 12):
+    if pose in ["sit", "giggle"]:
+        # Tail curled back / wiggling happy
+        for y in range(5, 12):
             draw_pixel(draw, 1, y, ORANGE)
-        draw_pixel(draw, 1, 6, WHITE)
+        draw_pixel(draw, 1, 4, WHITE)
     else:
         for y in range(5, 10):
             draw_pixel(draw, tail_x, y, ORANGE)
@@ -97,7 +153,7 @@ def draw_cat(pose="idle"):
         draw_pixel(draw, 9, 13, WHITE)
         draw_pixel(draw, 10, 12, ORANGE)
         draw_pixel(draw, 11, 13, ORANGE)
-    elif pose == "sit":
+    elif pose in ["sit", "giggle"]:
         # Legs tucked
         for x in range(4, 11):
             draw_pixel(draw, x, 12, ORANGE if x < 7 else WHITE)
@@ -138,16 +194,25 @@ def draw_cat(pose="idle"):
     draw_pixel(draw, 12, 4, eye_color)
     draw_pixel(draw, 11, 5, PINK) # Pink nose
 
-    # Angry Steam Effect
+    # Angry Steam / Small Pixel Heart on Top for Giggle
     if pose in ["angry", "smash"]:
         draw_pixel(draw, 6, 0, (255, 100, 100, 255))
         draw_pixel(draw, 7, 0, (255, 50, 50, 255))
         draw_pixel(draw, 13, 0, (255, 100, 100, 255))
+    elif pose == "giggle":
+        # Small cute pixel heart on top of cat head
+        RED_HEART = (255, 50, 90, 255)
+        draw_pixel(draw, 9, 0, RED_HEART)
+        draw_pixel(draw, 11, 0, RED_HEART)
+        draw_pixel(draw, 9, 1, RED_HEART)
+        draw_pixel(draw, 10, 1, RED_HEART)
+        draw_pixel(draw, 11, 1, RED_HEART)
+        draw_pixel(draw, 10, 2, RED_HEART)
 
     return img
 
 def main():
-    poses = ["idle", "walk1", "walk2", "sit", "angry", "smash"]
+    poses = ["idle", "walk1", "walk2", "sit", "angry", "smash", "sleep", "giggle"]
     for pose in poses:
         img = draw_cat(pose)
         filepath = os.path.join("sprites", f"cat_{pose}.png")

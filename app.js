@@ -33,6 +33,17 @@ const DIALOGUES = {
         "Nee thurakku… njan adakkam.",
         "Poda kochu cherukka",
         "Same mistake, different app."
+    ],
+    GIGGLE: [
+        "Hehehe… tickles! 😸✨",
+        "Kili kili! 😸",
+        "happy happy happyy 😸💖",
+        "Enthaappa ithu? 😸"
+    ],
+    SLEEP: [
+        "Zzz... 💤",
+        "Sshh... njan uranguva 😴",
+        "Night night 💤"
     ]
 };
 
@@ -40,27 +51,30 @@ const DIALOGUES = {
 let soundEnabled = true;
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
+const meowAudio = new Audio('sound/meow.mp3');
+
 function playMeowSound() {
     if (!soundEnabled) return;
     try {
-        if (audioCtx.state === 'suspended') {
-            audioCtx.resume();
-        }
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(440, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.15);
-        osc.frequency.exponentialRampToValueAtTime(600, audioCtx.currentTime + 0.3);
-        
-        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
-        
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.35);
+        const audioClone = meowAudio.cloneNode();
+        audioClone.play().catch(() => {
+            // Fallback to Web Audio synthesizer if audio file playback fails
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.15);
+            osc.frequency.exponentialRampToValueAtTime(600, audioCtx.currentTime + 0.3);
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.35);
+        });
     } catch (e) {
         console.log("Audio play error", e);
     }
@@ -118,11 +132,12 @@ const btnReset = document.getElementById("btn-reset-cat");
 const btnSoundToggle = document.getElementById("btn-sound-toggle");
 
 // Cat Simulator State
-let catState = "IDLE"; // IDLE, IRRITATED, WALKING, SMASHING, HAPPY
+let catState = "IDLE"; // IDLE, IRRITATED, WALKING, SMASHING, HAPPY, SLEEPING, GIGGLING
 let catPosX = 500;
 let catPosY = 380;
 let moveInterval = null;
 let speechTimer = null;
+let idleSleepTimer = null;
 let vscodeReopenCount = 0;
 let walkStep = 0;
 
@@ -151,13 +166,43 @@ function updateCatPosition(x, y) {
     simCat.style.top = `${y}px`;
 }
 
+function startIdleSleepTimer() {
+    if (idleSleepTimer) clearTimeout(idleSleepTimer);
+    idleSleepTimer = setTimeout(() => {
+        if (catState === "IDLE") {
+            catState = "SLEEPING";
+            setCatSprite("sleep");
+            const sleepQuotes = DIALOGUES["SLEEP"];
+            showSimSpeech(sleepQuotes[Math.floor(Math.random() * sleepQuotes.length)], 4000);
+        }
+    }, 2000);
+}
+
 function resetCat() {
     if (moveInterval) clearInterval(moveInterval);
     catState = "IDLE";
     setCatSprite("idle");
     const rect = desktopScreen.getBoundingClientRect();
     updateCatPosition(rect.width - 150, rect.height - 130);
+    startIdleSleepTimer();
 }
+
+// Click Cat to Giggle
+simCat.addEventListener("click", () => {
+    if (catState === "IDLE" || catState === "SLEEPING" || catState === "HAPPY") {
+        catState = "GIGGLING";
+        setCatSprite("giggle");
+        playMeowSound();
+        const giggleQuotes = DIALOGUES["GIGGLE"];
+        showSimSpeech(giggleQuotes[Math.floor(Math.random() * giggleQuotes.length)], 2000);
+        
+        setTimeout(() => {
+            catState = "IDLE";
+            setCatSprite("idle");
+            startIdleSleepTimer();
+        }, 2000);
+    }
+});
 
 // Window Spawning & Cat Attack AI
 btnVSCode.addEventListener("click", () => {

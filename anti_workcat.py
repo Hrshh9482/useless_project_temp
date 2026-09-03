@@ -7,6 +7,27 @@ from ctypes import wintypes
 import tkinter as tk
 from PIL import Image, ImageTk, ImageOps
 import uiautomation as auto
+import winsound
+import threading
+
+def play_meow_sound():
+    """Plays the uploaded cat meow audio file (sound/meow.mp3) asynchronously when cat giggles."""
+    def _meow():
+        try:
+            base_dir = os.path.dirname(os.path.abspath(__file__))
+            sound_path = os.path.join(base_dir, "sound", "meow.mp3")
+            if os.path.exists(sound_path):
+                winmm = ctypes.windll.winmm
+                winmm.mciSendStringW("close meow_sound", None, 0, 0)
+                winmm.mciSendStringW(f'open "{sound_path}" type mpegvideo alias meow_sound', None, 0, 0)
+                winmm.mciSendStringW("play meow_sound from 0", None, 0, 0)
+            else:
+                winsound.Beep(440, 90)
+                winsound.Beep(659, 140)
+                winsound.Beep(587, 100)
+        except Exception:
+            pass
+    threading.Thread(target=_meow, daemon=True).start()
 
 auto.SetGlobalSearchTimeout(0.5)
 
@@ -197,6 +218,17 @@ DIALOGUES = {
         "Nee thurakku… njan adakkam.",
         "Poda kochu cherukka",
         "Same mistake, different app."
+    ],
+    "GIGGLE": [
+        "Hehehe… tickles! 😸✨",
+        "Kili kili! 😸",
+        "happy happy happyy 😸💖",
+        "Enthaappa ithu? 😸"
+    ],
+    "SLEEP": [
+        "Zzz... 💤",
+        "Sshh... njan uranguva 😴",
+        "Night night 💤"
     ]
 }
 
@@ -264,12 +296,13 @@ class AntiWorkCatApp:
         self.bubble_text = self.canvas.create_text(160, 35, text="", fill="#ffffff", font=("Segoe UI", 10, "bold"), width=290, justify="center", state="hidden")
         self.cat_img_id = self.canvas.create_image(160, 120, image=self.sprites.get("idle_right"))
         
-        # Make Cat Draggable by Mouse
-        self.canvas.tag_bind(self.cat_img_id, "<ButtonPress-1>", self.on_drag_start)
+        # Make Cat Draggable & Clickable for Giggle
+        self.canvas.tag_bind(self.cat_img_id, "<ButtonPress-1>", self.on_cat_click)
         self.canvas.tag_bind(self.cat_img_id, "<B1-Motion>", self.on_drag_motion)
         
         # State Machine Variables
-        self.state = "IDLE"  # IDLE, IRRITATED, WALKING_TO_CLOSE, SMASHING, HAPPY
+        self.state = "IDLE"  # IDLE, IRRITATED, WALKING_TO_CLOSE, SMASHING, HAPPY, SLEEPING, GIGGLING
+        self.idle_start_time = time.time()
         self.facing = "right" # left or right
         self.walk_step = 0
         self.target_hwnd = None
@@ -290,7 +323,9 @@ class AntiWorkCatApp:
             "walk2": "cat_walk2.png",
             "sit": "cat_sit.png",
             "angry": "cat_angry.png",
-            "smash": "cat_smash.png"
+            "smash": "cat_smash.png",
+            "sleep": "cat_sleep.png",
+            "giggle": "cat_giggle.png"
         }
         
         for key, fname in sprite_files.items():
@@ -322,14 +357,23 @@ class AntiWorkCatApp:
         if full_key in self.sprites:
             self.canvas.itemconfig(self.cat_img_id, image=self.sprites[full_key])
 
-    def on_drag_start(self, event):
+    def on_cat_click(self, event):
         self._drag_start_x = event.x_root - self.cat_x
         self._drag_start_y = event.y_root - self.cat_y
+        
+        # Trigger giggle reaction with meow audio when clicked
+        if self.state in ["IDLE", "SLEEPING", "HAPPY"]:
+            self.state = "GIGGLING"
+            self.set_sprite("giggle")
+            play_meow_sound()
+            self.speak(random.choice(DIALOGUES["GIGGLE"]), 2000)
+            self.root.after(2000, self.reset_to_idle)
 
     def on_drag_motion(self, event):
         self.cat_x = event.x_root - self._drag_start_x
         self.cat_y = event.y_root - self._drag_start_y
         self.root.geometry(f"320x180+{int(self.cat_x)}+{int(self.cat_y)}")
+        self.idle_start_time = time.time()
 
     def check_active_window(self):
         if self.state in ["WALKING_TO_CLOSE", "SMASHING"]:
@@ -429,13 +473,17 @@ class AntiWorkCatApp:
                 self.set_sprite(walk_pose)
 
         elif self.state == "IDLE":
-            if random.random() < 0.03:
+            # If idle for more than 2 seconds, cat goes to sleep
+            if time.time() - self.idle_start_time >= 2.0:
+                self.state = "SLEEPING"
+                self.set_sprite("sleep")
+                self.speak(random.choice(DIALOGUES["SLEEP"]), 4000)
+            elif random.random() < 0.03:
                 step_x = random.choice([-8, 8])
                 self.facing = "left" if step_x < 0 else "right"
                 self.cat_x = max(20, min(self.screen_w - 340, self.cat_x + step_x))
                 self.cat_y = max(50, min(self.screen_h - 220, self.cat_y + random.choice([-2, 2])))
                 self.root.geometry(f"320x180+{int(self.cat_x)}+{int(self.cat_y)}")
-                self.set_sprite("idle")
                 self.set_sprite("idle")
 
         self.root.after(30, self.update_loop)
@@ -458,6 +506,7 @@ class AntiWorkCatApp:
 
     def reset_to_idle(self):
         self.state = "IDLE"
+        self.idle_start_time = time.time()
         self.set_sprite("idle")
 
     def run(self):
