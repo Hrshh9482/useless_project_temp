@@ -56,7 +56,7 @@ def draw_cat(pose="idle"):
     draw_pixel(draw, 10, 11, ORANGE)
 
     # Legs
-    if pose == "idle":
+    if pose in ["idle", "angry"]:
         draw_pixel(draw, 4, 12, ORANGE)
         draw_pixel(draw, 5, 12, ORANGE)
         draw_pixel(draw, 4, 13, ORANGE)

@@ -45,6 +45,9 @@ const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 function playMeowSound() {
     if (!soundEnabled) return;
     try {
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.type = 'sine';
@@ -68,6 +71,9 @@ function playMeowSound() {
 function playSmashSound() {
     if (!soundEnabled) return;
     try {
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.type = 'triangle';
