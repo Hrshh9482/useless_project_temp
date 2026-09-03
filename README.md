@@ -1,4 +1,5 @@
-# Kuttan the Desktop Poocha😾 ("Nee thurakku... njan adakkam") 🎯
+# Kuttan the Desktop Poocha😾 
+# ("Nee thurakku... njan adakkam") 
 
 
 ## Basic Details
