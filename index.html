@@ -1,1 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anti-WorkCat | Nee Thurakku... Njan Adakkam 😾</title>
+    <meta name="description" content="The anti-productivity desktop pet cat that smashes your work apps and forces you to scroll Reels.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Press+Start+2P&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <header class="navbar">
+        <div class="brand">
+            <span class="logo-cat">😾</span>
+            <span class="brand-title">Anti-WorkCat</span>
+            <span class="badge-useless">TinkerHub Useless Projects 3.0</span>
+        </div>
+        <nav class="nav-links">
+            <a href="#simulator">Desktop Simulator</a>
+            <a href="#dialogues">Manglish Quotes</a>
+            <a href="#how-it-works">How It Works</a>
+            <a href="#download" class="btn-download">Run Desktop Pet 🚀</a>
+        </nav>
+    </header>
 
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Nee thurakku... <br><span class="highlight-text">njan adakkam. 🐾</span></h1>
+            <p class="hero-subtitle">
+                The ultimate anti-productivity desktop pet. When you open VS Code or Terminal, this cat gets irritated, marches over to your window, and <strong>smashes it closed</strong> while telling you to open Instagram Reels instead.
+            </p>
+            <div class="hero-actions">
+                <a href="#simulator" class="btn-primary">Try Interactive Simulator 🎮</a>
+                <button id="btn-sound-toggle" class="btn-secondary">🔊 Sound FX: ON</button>
+            </div>
+        </div>
+        <div class="hero-card">
+            <div class="sprite-preview-container">
+                <img src="sprites/cat_smash.png" alt="AntiWorkCat Paw Smash" class="pixel-cat-hero floating-cat">
+                <div class="speech-bubble-hero">
+                    "Ayyo… veendum work aano? Nee thurakku… njan adakkam! 😾"
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Desktop Simulator Section -->
+    <section id="simulator" class="simulator-section">
+        <div class="section-header">
+            <h2>🎮 Interactive Desktop Simulator</h2>
+            <p>Test the cat's AI directly in your browser! Open VS Code to watch the cat attack, or open Instagram to make it happy.</p>
+        </div>
+
+        <div class="simulator-container">
+            <!-- Simulated OS Top Bar -->
+            <div class="os-topbar">
+                <div class="os-brand">Anti-WorkOS v1.0</div>
+                <div class="os-controls">
+                    <button class="os-btn btn-vscode" id="btn-spawn-vscode">💻 Open VS Code</button>
+                    <button class="os-btn btn-insta" id="btn-spawn-insta">📱 Open Instagram</button>
+                    <button class="os-btn btn-netflix" id="btn-spawn-netflix">🎬 Open Netflix</button>
+                    <button class="os-btn btn-reset" id="btn-reset-cat">🔄 Reset Cat</button>
+                </div>
+                <div class="os-clock" id="os-clock">22:30 PM</div>
+            </div>
+
+            <!-- Simulated Desktop Canvas Screen -->
+            <div class="desktop-screen" id="desktop-screen">
+                <!-- Wallpaper -->
+                <div class="desktop-wallpaper"></div>
+
+                <!-- Web Simulator Windows Container -->
+                <div class="window-layer" id="window-layer">
+
+                    <!-- VS Code Window -->
+                    <div class="sim-window window-vscode hidden" id="win-vscode">
+                        <div class="win-header">
+                            <span class="win-title">📄 main.py - Visual Studio Code</span>
+                            <button class="win-close-btn" id="close-vscode">✕</button>
+                        </div>
+                        <div class="win-body vscode-body">
+                            <div class="sidebar">
+                                <div>📁 src</div>
+                                <div class="file active">🐍 main.py</div>
+                                <div class="file">⚙️ config.json</div>
+                            </div>
+                            <div class="editor">
+                                <div class="line"><span class="ln">1</span> <span class="kwd">def</span> <span class="fn">do_hard_work</span>():</div>
+                                <div class="line"><span class="ln">2</span> &nbsp;&nbsp;&nbsp;&nbsp;print(<span class="str">"Writing complex code..."</span>)</div>
+                                <div class="line"><span class="ln">3</span> &nbsp;&nbsp;&nbsp;&nbsp;time.sleep(<span class="num">3600</span>)</div>
+                                <div class="line"><span class="ln">4</span> &nbsp;&nbsp;&nbsp;&nbsp;<span class="kwd">return</span> <span class="str">"Productivity +100"</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Instagram Window -->
+                    <div class="sim-window window-insta hidden" id="win-insta">
+                        <div class="win-header">
+                            <span class="win-title">📷 Instagram Reels</span>
+                            <button class="win-close-btn" id="close-insta">✕</button>
+                        </div>
+                        <div class="win-body insta-body">
+                            <div class="reel-card">
+                                <div class="reel-video">
+                                    <span>🎥 Reel #402: Cat falling off sofa</span>
+                                    <div class="like-heart">❤️ 1.2M</div>
+                                </div>
+                                <div class="reel-caption">"Oru reel koodi... 🍿"</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Netflix Window -->
+                    <div class="sim-window window-netflix hidden" id="win-netflix">
+                        <div class="win-header">
+                            <span class="win-title">🍿 Netflix - Binge Time</span>
+                            <button class="win-close-btn" id="close-netflix">✕</button>
+                        </div>
+                        <div class="win-body netflix-body">
+                            <div class="show-banner">
+                                <h3>Stranger Cat - Season 4</h3>
+                                <p>Just one episode before sleeping...</p>
+                                <button class="btn-play">▶ Play Episode 1</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Animated Cat Entity -->
+                <div class="sim-cat-entity" id="sim-cat">
+                    <div class="sim-speech-bubble hidden" id="sim-speech">
+                        Ayyo… veendum work aano?
+                    </div>
+                    <img src="sprites/cat_idle.png" alt="Cat Sprite" id="sim-cat-img" class="cat-sprite">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dialogue Soundboard Section -->
+    <section id="dialogues" class="dialogue-section">
+        <div class="section-header">
+            <h2>🗣️ Signature Manglish Dialogues</h2>
+            <p>Click any category to hear the cat speak and preview its reactions!</p>
+        </div>
+
+        <div class="dialogue-grid">
+            <div class="dialogue-card" data-category="PRODUCTIVE_OPENED">
+                <div class="card-icon">😾</div>
+                <h3>Productive App Opened</h3>
+                <ul>
+                    <li>“Ayyo… veendum work aano?”</li>
+                    <li>“Nee thurakku… njan adakkam.”</li>
+                    <li>“Ithu venda.”</li>
+                </ul>
+                <button class="btn-speak" onclick="playQuote('PRODUCTIVE_OPENED')">🔊 Play Quote</button>
+            </div>
+
+            <div class="dialogue-card" data-category="GOING_TO_CLOSE">
+                <div class="card-icon">🚶</div>
+                <h3>Cat Going to Close</h3>
+                <ul>
+                    <li>“Njan varunnund…”</li>
+                    <li>“Nice try.”</li>
+                    <li>“Odi rakshappedanda.”</li>
+                </ul>
+                <button class="btn-speak" onclick="playQuote('GOING_TO_CLOSE')">🔊 Play Quote</button>
+            </div>
+
+            <div class="dialogue-card" data-category="AFTER_CLOSING">
+                <div class="card-icon">🐾</div>
+                <h3>After Closing Window</h3>
+                <ul>
+                    <li>“Aah… ippo correct.”</li>
+                    <li>“Problem solved.”</li>
+                    <li>“You’re welcome.”</li>
+                </ul>
+                <button class="btn-speak" onclick="playQuote('AFTER_CLOSING')">🔊 Play Quote</button>
+            </div>
+
+            <div class="dialogue-card" data-category="INSTAGRAM_OPENED">
+                <div class="card-icon">📱</div>
+                <h3>Instagram / Reels Opened</h3>
+                <ul>
+                    <li>“Ithaanu nammade vazhi.”</li>
+                    <li>“Oru reel koodi.”</li>
+                    <li>“Aah… ippo samadhanam.”</li>
+                </ul>
+                <button class="btn-speak" onclick="playQuote('INSTAGRAM_OPENED')">🔊 Play Quote</button>
+            </div>
+
+            <div class="dialogue-card" data-category="NETFLIX_OPENED">
+                <div class="card-icon">🎬</div>
+                <h3>Netflix / YouTube Opened</h3>
+                <ul>
+                    <li>“Just one episode.”</li>
+                    <li>“Work pinne cheyyaam.”</li>
+                    <li>“Now we’re talking.”</li>
+                </ul>
+                <button class="btn-speak" onclick="playQuote('NETFLIX_OPENED')">🔊 Play Quote</button>
+            </div>
+
+            <div class="dialogue-card" data-category="REOPENED_PRODUCTIVE">
+                <div class="card-icon">🔁</div>
+                <h3>Productivity App Reopened</h3>
+                <ul>
+                    <li>“Ayyo… pinneyum?”</li>
+                    <li>“Nee enne test cheyyuvaano?”</li>
+                    <li>“Ithu ippo personal aanu.”</li>
+                </ul>
+                <button class="btn-speak" onclick="playQuote('REOPENED_PRODUCTIVE')">🔊 Play Quote</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Run Desktop Pet Instructions -->
+    <section id="download" class="download-section">
+        <div class="download-card">
+            <h2>💻 Run Native Windows Desktop Pet</h2>
+            <p>Run the actual desktop pet right on your Windows computer! It floats transparently over your desktop and smashes real VS Code windows.</p>
+            <div class="code-box">
+                <code># Step 1: Open PowerShell / Terminal inside project folder</code><br>
+                <code>python generate_assets.py</code><br>
+                <code># Step 2: Run Desktop Pet</code><br>
+                <code>python anti_workcat.py</code>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Made with ❤️ for <strong>TinkerHub Useless Projects 3.0</strong> | Team <strong>TechHack</strong> (Vaishnavi P B & Harsha Hari)</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
