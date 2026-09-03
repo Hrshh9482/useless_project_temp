@@ -2,14 +2,13 @@
 
 const DIALOGUES = {
     PRODUCTIVE_OPENED: [
-        "Ayyo… veendum work aano? 😾",
+        "Dont Play with me Nigeshhhh 😾",
         "Nee thurakku… njan adakkam.",
-        "Ithu venda. 🚫"
+        "Vendatta Venda 🚫"
     ],
     GOING_TO_CLOSE: [
-        "Njan varunnund… 🚶🐾",
-        "Nice try. 😏",
-        "Odi rakshappedanda. 🔥"
+        "Vannu njann 🚶🐾",
+        "Nice try. 😏"
     ],
     AFTER_CLOSING: [
         "Aah… ippo correct. ✨",
@@ -17,23 +16,22 @@ const DIALOGUES = {
         "You’re welcome. 💅"
     ],
     INSTAGRAM_OPENED: [
-        "Ithaanu nammade vazhi. 📱",
-        "Oru reel koodi. 🎬",
-        "Aah… ippo samadhanam. 💖"
+        "Ada Gommale",
+        "Oru reel kude kanaam 🙂↕️ 🎬",
+        "Ingane Ingane cheyy Baalu 💖"
     ],
     NETFLIX_OPENED: [
+        "Now we’re talking netflix. 😎",
         "Just one episode. 🍿",
-        "Work pinne cheyyaam. 💤",
-        "Now we’re talking. 😎"
+        "Work pinne cheyyaam. 💤"
     ],
     REOPENED_PRODUCTIVE: [
         "Ayyo… pinneyum? 💢",
-        "Nee enne test cheyyuvaano?",
         "Ithu ippo personal aanu. 🔥😾"
     ],
     SIGNATURE: [
         "Nee thurakku… njan adakkam.",
-        "Ippo vannallo vazhikku.",
+        "Poda kochu cherukka",
         "Same mistake, different app."
     ]
 };
@@ -259,7 +257,7 @@ function startWalkToVSCode() {
 function executeSmash(facingLeft = false) {
     catState = "SMASHING";
     setCatSprite("smash", facingLeft);
-    showSimSpeech("PAW SMASH! 💥🐾", 1500);
+    showSimSpeech("Bleh ;)", 1500);
     playSmashSound();
 
     setTimeout(() => {

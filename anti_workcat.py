@@ -6,6 +6,9 @@ import ctypes
 from ctypes import wintypes
 import tkinter as tk
 from PIL import Image, ImageTk, ImageOps
+import uiautomation as auto
+
+auto.SetGlobalSearchTimeout(0.5)
 
 # --- Win32 API Definitions & DPI Awareness ---
 user32 = ctypes.windll.user32
@@ -16,6 +19,11 @@ except Exception:
     pass
 
 WM_CLOSE = 0x0010
+
+# --- Win32 Focus & Keyboard API Definitions ---
+VK_CONTROL = 0x11
+VK_W = 0x57
+KEYEVENTF_KEYUP = 0x0002
 
 class RECT(ctypes.Structure):
     _fields_ = [
@@ -34,6 +42,43 @@ user32.GetWindowRect.argtypes = [wintypes.HWND, ctypes.POINTER(RECT)]
 user32.GetWindowRect.restype = wintypes.BOOL
 user32.PostMessageW.argtypes = [wintypes.HWND, wintypes.UINT, wintypes.WPARAM, wintypes.LPARAM]
 user32.PostMessageW.restype = wintypes.BOOL
+user32.GetWindowThreadProcessId.argtypes = [wintypes.HWND, ctypes.POINTER(wintypes.DWORD)]
+user32.GetWindowThreadProcessId.restype = wintypes.DWORD
+user32.SetForegroundWindow.argtypes = [wintypes.HWND]
+user32.SetForegroundWindow.restype = wintypes.BOOL
+user32.AttachThreadInput.argtypes = [wintypes.DWORD, wintypes.DWORD, wintypes.BOOL]
+user32.AttachThreadInput.restype = wintypes.BOOL
+user32.ShowWindow.argtypes = [wintypes.HWND, ctypes.c_int]
+user32.ShowWindow.restype = wintypes.BOOL
+user32.BringWindowToTop.argtypes = [wintypes.HWND]
+user32.BringWindowToTop.restype = wintypes.BOOL
+user32.keybd_event.argtypes = [wintypes.BYTE, wintypes.BYTE, wintypes.DWORD, ctypes.c_size_t]
+
+def force_foreground(hwnd):
+    """Forcefully bring target window to foreground even if caller is background."""
+    if not hwnd:
+        return False
+    
+    current_fg = user32.GetForegroundWindow()
+    if current_fg == hwnd:
+        return True
+        
+    fg_thread = user32.GetWindowThreadProcessId(current_fg, None)
+    target_thread = user32.GetWindowThreadProcessId(hwnd, None)
+    
+    if fg_thread and target_thread and fg_thread != target_thread:
+        user32.AttachThreadInput(fg_thread, target_thread, True)
+        user32.ShowWindow(hwnd, 9)  # SW_RESTORE
+        user32.SetForegroundWindow(hwnd)
+        user32.BringWindowToTop(hwnd)
+        user32.AttachThreadInput(fg_thread, target_thread, False)
+    else:
+        user32.ShowWindow(hwnd, 9)
+        user32.SetForegroundWindow(hwnd)
+        user32.BringWindowToTop(hwnd)
+        
+    time.sleep(0.1)
+    return user32.GetForegroundWindow() == hwnd
 
 def get_active_window_info():
     """Returns (hwnd, title, (left, top, right, bottom)) of active foreground window."""
@@ -51,21 +96,83 @@ def get_active_window_info():
     return hwnd, buf.value, (rect.left, rect.top, rect.right, rect.bottom)
 
 def close_window(hwnd):
-    """Sends WM_CLOSE message to target window handle."""
+    """Sends WM_CLOSE message to target window handle (closes whole app)."""
     if hwnd:
         user32.PostMessageW(hwnd, WM_CLOSE, 0, 0)
+
+def close_browser_tab(hwnd):
+    """Brings browser to foreground and sends Ctrl+W to close only the active tab."""
+    if not hwnd:
+        return
+        
+    # Force browser into active focus
+    force_foreground(hwnd)
+    time.sleep(0.15)
+    
+    # Send Ctrl+W key combination using Win32 keybd_event
+    user32.keybd_event(VK_CONTROL, 0, 0, 0)
+    time.sleep(0.05)
+    user32.keybd_event(VK_W, 0, 0, 0)
+    time.sleep(0.05)
+    user32.keybd_event(VK_W, 0, KEYEVENTF_KEYUP, 0)
+    time.sleep(0.05)
+    user32.keybd_event(VK_CONTROL, 0, KEYEVENTF_KEYUP, 0)
+
+# Browser process identifiers — matched against window title
+BROWSER_KEYWORDS = [
+    "google chrome", "chrome", "mozilla firefox", "firefox",
+    "microsoft edge", "edge", "opera", "brave", "vivaldi", "arc",
+]
+
+def get_browser_tab_rect(hwnd, title):
+    """Finds exact screen rectangle (left, top, right, bottom) of the productive tab item using UI Automation."""
+    try:
+        win_control = auto.ControlFromHandle(hwnd)
+        if not win_control:
+            return None
+            
+        title_lower = (title or "").lower()
+        selected_rect = None
+        keyword_rect = None
+        
+        for control, depth in auto.WalkControl(win_control, maxDepth=8):
+            if control.ControlTypeName == 'TabItemControl':
+                tab_name = (control.Name or "").lower()
+                rect = control.BoundingRectangle
+                
+                # Ensure valid rect on screen
+                if rect.right <= rect.left or rect.bottom <= rect.top:
+                    continue
+                
+                # Check exact title match
+                if tab_name and (tab_name in title_lower or title_lower.startswith(tab_name)):
+                    return (rect.left, rect.top, rect.right, rect.bottom)
+                
+                # Check productive keyword match in tab title
+                if any(kw in tab_name for kw in PRODUCTIVE_KEYWORDS):
+                    keyword_rect = (rect.left, rect.top, rect.right, rect.bottom)
+                    
+                # Store selected tab fallback
+                try:
+                    if getattr(control, 'IsSelected', False) or getattr(control, 'HasKeyboardFocus', False):
+                        selected_rect = (rect.left, rect.top, rect.right, rect.bottom)
+                except Exception:
+                    pass
+
+        return keyword_rect or selected_rect
+    except Exception:
+        return None
 
 # --- Dialogues & Configuration ---
 DIALOGUES = {
     "PRODUCTIVE_OPENED": [
-        "Ayyo… veendum work aano? 😾",
+        "Dont Play with me Nigeshhhh 😾",
         "Nee thurakku… njan adakkam.",
-        "Ithu venda. 🚫"
+        "Vendatta Venda 🚫"
     ],
     "GOING_TO_CLOSE": [
-        "Njan varunnund… 🚶🐾",
+        "Vannu njann 🚶🐾",
         "Nice try. 😏",
-        "Odi rakshappedanda. 🔥"
     ],
     "AFTER_CLOSING": [
         "Aah… ippo correct. ✨",
@@ -73,23 +180,22 @@ DIALOGUES = {
         "You’re welcome. 💅"
     ],
     "INSTAGRAM_OPENED": [
-        "Ithaanu nammade vazhi. 📱",
-        "Oru reel koodi. 🎬",
-        "Aah… ippo samadhanam. 💖"
+        "Ada Gommale",
+        "Oru reel kude kanaam 🙂↕️ 🎬",
+        "Ingane Ingane cheyy Baalu 💖"
     ],
     "NETFLIX_OPENED": [
+        "Now we’re talking netflix. 😎",
         "Just one episode. 🍿",
         "Work pinne cheyyaam. 💤",
-        "Now we’re talking. 😎"
     ],
     "REOPENED_PRODUCTIVE": [
         "Ayyo… pinneyum? 💢",
-        "Nee enne test cheyyuvaano?",
         "Ithu ippo personal aanu. 🔥😾"
     ],
     "SIGNATURE": [
         "Nee thurakku… njan adakkam.",
-        "Ippo vannallo vazhikku.",
+        "Poda kochu cherukka",
         "Same mistake, different app."
     ]
 }
@@ -120,6 +226,11 @@ PRODUCTIVE_KEYWORDS = [
 DISTRACTION_KEYWORDS = [
     "instagram", "facebook", "reels", "shorts", "tiktok", "netflix", "youtube", "reddit"
 ]
+
+def is_browser_window(title):
+    """Check if a window title belongs to a web browser."""
+    title_lower = title.lower()
+    return any(bk in title_lower for bk in BROWSER_KEYWORDS)
 
 class AntiWorkCatApp:
     def __init__(self):
@@ -163,6 +274,7 @@ class AntiWorkCatApp:
         self.walk_step = 0
         self.target_hwnd = None
         self.target_close_pos = (0, 0)
+        self.target_is_browser = False
         self.last_closed_hwnd = None
         self.reopen_count = 0
         self.bubble_clear_timer = None
@@ -240,10 +352,28 @@ class AntiWorkCatApp:
                     quote_cat = "PRODUCTIVE_OPENED"
 
                 self.target_hwnd = hwnd
-                self.target_close_pos = (
-                    max(10, min(self.screen_w - 320, right - 160)),
-                    max(10, min(self.screen_h - 180, top - 40))
-                )
+                self.target_is_browser = is_browser_window(title)
+                
+                tab_rect = None
+                if self.target_is_browser:
+                    tab_rect = get_browser_tab_rect(hwnd, title)
+                    
+                if tab_rect:
+                    t_left, t_top, t_right, t_bottom = tab_rect
+                    tab_center_x = t_left + (t_right - t_left) // 2
+                    # Direct cat to the exact center of the active productive tab on screen!
+                    target_x = max(10, min(self.screen_w - 320, tab_center_x - 160))
+                    target_y = max(10, min(self.screen_h - 180, t_top - 40))
+                elif self.target_is_browser:
+                    # Fallback for browser top bar
+                    target_x = max(10, min(self.screen_w - 320, left + 150))
+                    target_y = max(10, min(self.screen_h - 180, top - 40))
+                else:
+                    # Target top-right window close button for desktop apps
+                    target_x = max(10, min(self.screen_w - 320, right - 160))
+                    target_y = max(10, min(self.screen_h - 180, top - 40))
+                    
+                self.target_close_pos = (target_x, target_y)
                 
                 # Face direction of target
                 self.facing = "left" if self.target_close_pos[0] < self.cat_x else "right"
@@ -284,7 +414,7 @@ class AntiWorkCatApp:
                 # Reached close button! Smash!
                 self.state = "SMASHING"
                 self.set_sprite("smash")
-                self.speak("PAW SMASH! 💥🐾")
+                self.speak("Bleh ;)")
                 self.root.after(450, self.execute_smash)
             else:
                 # Smooth movement step (6px per tick)
@@ -312,9 +442,15 @@ class AntiWorkCatApp:
 
     def execute_smash(self):
         if self.target_hwnd:
-            close_window(self.target_hwnd)
+            if self.target_is_browser:
+                # Close only the active browser tab (Ctrl+W)
+                close_browser_tab(self.target_hwnd)
+            else:
+                # Close the whole app window
+                close_window(self.target_hwnd)
             self.last_closed_hwnd = self.target_hwnd
             self.target_hwnd = None
+            self.target_is_browser = False
             
         self.set_sprite("idle")
         self.speak(random.choice(DIALOGUES["AFTER_CLOSING"]))
