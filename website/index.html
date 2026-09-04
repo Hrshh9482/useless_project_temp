@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuttan the Desktop Poocha 😾 | Nee Thurakku... Njan Adakkam</title>
+    <meta name="description" content="Meet Kuttan — the mischievous anti-productivity desktop pet cat that smashes your VS Code, closes your LeetCode tabs, and forces you to scroll Instagram Reels instead.">
+    <link rel="icon" href="sprites/cat_angry.png" type="image/png">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ===== Navbar ===== -->
+    <header class="navbar">
+        <div class="brand">
+            <img src="sprites/cat_idle.png" alt="Kuttan" class="brand-logo">
+            <div>
+                <span class="brand-title">Kuttan the Desktop Poocha</span>
+                <span class="brand-subtitle">TinkerHub Useless Projects 3.0</span>
+            </div>
+        </div>
+        <nav class="nav-links">
+            <a href="#how-it-works">How It Works</a>
+            <a href="#simulator">Try Simulator</a>
+            <a href="#dialogues">Dialogues</a>
+            <a href="#download" class="btn-nav-download">⬇ Download ZIP</a>
+        </nav>
+    </header>
+
+    <!-- ===== Hero ===== -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">🐾 USELESS PROJECT OF THE YEAR</div>
+            <h1 class="hero-title">
+                Nee thurakku...<br>
+                <span class="gradient-text">njan adakkam. 😾</span>
+            </h1>
+            <p class="hero-subtitle">
+                Meet <strong>Kuttan</strong> — the mischievous desktop pet cat who monitors your active windows, gets furious when you try to be productive, marches over to your VS Code, and <strong>smashes it closed</strong>. Because you deserve a break.
+            </p>
+            <div class="hero-actions">
+                <a href="#simulator" class="btn-primary">🎮 Try the Simulator</a>
+                <a href="#download" class="btn-secondary">⬇ Download for Windows</a>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="hero-cat-card">
+                <div class="hero-speech">"Ayyo… veendum work aano? 😾"</div>
+                <img src="sprites/cat_smash.png" alt="Kuttan Paw Smash" class="hero-cat-img">
+                <div class="floating-paws paw-1">🐾</div>
+                <div class="floating-paws paw-2">🐾</div>
+                <div class="floating-paws paw-3">💢</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== How It Works ===== -->
+    <section id="how-it-works" class="how-section">
+        <div class="section-header">
+            <h2>🧠 How Kuttan Works</h2>
+            <p>A surprisingly sophisticated cat with zero tolerance for productivity</p>
+        </div>
+
+        <div class="how-grid">
+            <div class="how-card">
+                <div class="how-icon">👁️</div>
+                <div class="how-step">STEP 1</div>
+                <h3>Monitors Windows</h3>
+                <p>Kuttan watches your active windows and browser tabs in real-time using Win32 API and UI Automation.</p>
+            </div>
+            <div class="how-card">
+                <div class="how-icon">😾</div>
+                <div class="how-step">STEP 2</div>
+                <h3>Gets Irritated</h3>
+                <p>Opens VS Code? LeetCode? ChatGPT? PDF? Kuttan's eyes turn red and he starts fuming with anger.</p>
+            </div>
+            <div class="how-card">
+                <div class="how-icon">🚶</div>
+                <div class="how-step">STEP 3</div>
+                <h3>Walks to Target</h3>
+                <p>Using UI Automation, Kuttan locates the exact tab position on screen and walks over with animated legs.</p>
+            </div>
+            <div class="how-card">
+                <div class="how-icon">💥</div>
+                <div class="how-step">STEP 4</div>
+                <h3>Paw Smash!</h3>
+                <p>Kuttan raises his paw and SMASHES — sending Ctrl+W for browser tabs or WM_CLOSE for desktop apps.</p>
+            </div>
+            <div class="how-card">
+                <div class="how-icon">😸</div>
+                <div class="how-step">BONUS</div>
+                <h3>Loves Distractions</h3>
+                <p>Open Instagram or Netflix? Kuttan sits happily, purrs, and encourages you to keep scrolling.</p>
+            </div>
+            <div class="how-card">
+                <div class="how-icon">😴</div>
+                <div class="how-step">IDLE</div>
+                <h3>Sleeps & Giggles</h3>
+                <p>No activity for 2 seconds? Kuttan curls up and sleeps. Click him for giggles, hearts, and a meow!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Interactive Simulator ===== -->
+    <section id="simulator" class="simulator-section">
+        <div class="section-header">
+            <h2>🎮 Interactive Desktop Simulator</h2>
+            <p>Open productive apps and watch Kuttan attack! Open Instagram to make him happy. Click the cat to hear him giggle.</p>
+        </div>
+
+        <div class="simulator-container">
+            <div class="os-topbar">
+                <div class="os-brand">
+                    <img src="sprites/cat_idle.png" alt="">
+                    KuttanOS v1.0
+                </div>
+                <div class="os-controls">
+                    <button class="os-btn btn-vscode" id="btn-spawn-vscode">💻 VS Code</button>
+                    <button class="os-btn btn-leetcode" id="btn-spawn-leetcode">🧩 LeetCode</button>
+                    <button class="os-btn btn-insta" id="btn-spawn-insta">📱 Instagram</button>
+                    <button class="os-btn btn-netflix" id="btn-spawn-netflix">🎬 Netflix</button>
+                    <button class="os-btn btn-reset" id="btn-reset-cat">🔄 Reset</button>
+                </div>
+                <div class="os-clock" id="os-clock">00:00</div>
+            </div>
+
+            <div class="desktop-screen" id="desktop-screen">
+                <div class="desktop-wallpaper"></div>
+
+                <div class="window-layer" id="window-layer">
+                    <!-- VS Code Window -->
+                    <div class="sim-window window-vscode hidden" id="win-vscode">
+                        <div class="win-header">
+                            <span class="win-title">📄 main.py — Visual Studio Code</span>
+                            <button class="win-close-btn" id="close-vscode">✕</button>
+                        </div>
+                        <div class="win-body vscode-body">
+                            <div class="sidebar">
+                                <div>📁 src</div>
+                                <div class="file active">🐍 main.py</div>
+                                <div class="file">⚙️ config.json</div>
+                                <div class="file">📦 utils.py</div>
+                            </div>
+                            <div class="editor">
+                                <div class="line"><span class="ln">1</span> <span class="kwd">def</span> <span class="fn">do_hard_work</span>():</div>
+                                <div class="line"><span class="ln">2</span> &nbsp;&nbsp;&nbsp;&nbsp;print(<span class="str">"Writing code..."</span>)</div>
+                                <div class="line"><span class="ln">3</span> &nbsp;&nbsp;&nbsp;&nbsp;time.sleep(<span class="num">3600</span>)</div>
+                                <div class="line"><span class="ln">4</span> &nbsp;&nbsp;&nbsp;&nbsp;<span class="kwd">return</span> <span class="str">"Productivity +100"</span></div>
+                                <div class="line"><span class="ln">5</span></div>
+                                <div class="line"><span class="ln">6</span> <span class="kwd">if</span> __name__ == <span class="str">"__main__"</span>:</div>
+                                <div class="line"><span class="ln">7</span> &nbsp;&nbsp;&nbsp;&nbsp;do_hard_work()</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- LeetCode Window -->
+                    <div class="sim-window window-leetcode hidden" id="win-leetcode">
+                        <div class="win-header">
+                            <span class="win-title">🧩 LeetCode — Two Sum</span>
+                            <button class="win-close-btn" id="close-leetcode">✕</button>
+                        </div>
+                        <div class="win-body leetcode-body">
+                            <div class="lc-header">
+                                <span class="lc-difficulty lc-hard">Hard</span>
+                                <span class="lc-title">42. Trapping Rain Water</span>
+                            </div>
+                            <p class="lc-desc">Given n non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it can trap after raining...</p>
+                        </div>
+                    </div>
+
+                    <!-- Instagram Window -->
+                    <div class="sim-window window-insta hidden" id="win-insta">
+                        <div class="win-header">
+                            <span class="win-title">📷 Instagram Reels</span>
+                            <button class="win-close-btn" id="close-insta">✕</button>
+                        </div>
+                        <div class="win-body insta-body">
+                            <div class="reel-card">
+                                <div class="reel-video">
+                                    <span>🎥 Reel #402: Cat falling off sofa</span>
+                                    <div class="like-heart">❤️ 1.2M likes</div>
+                                </div>
+                                <div class="reel-caption">"Oru reel koodi kanaam... 🍿"</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Netflix Window -->
+                    <div class="sim-window window-netflix hidden" id="win-netflix">
+                        <div class="win-header">
+                            <span class="win-title">🍿 Netflix — Binge Time</span>
+                            <button class="win-close-btn" id="close-netflix">✕</button>
+                        </div>
+                        <div class="win-body netflix-body">
+                            <div class="show-banner">
+                                <h3>Stranger Cat — Season 4</h3>
+                                <p>Just one episode before sleeping...</p>
+                                <button class="btn-play">▶ Play Episode 1</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cat Entity -->
+                <div class="sim-cat-entity" id="sim-cat">
+                    <div class="sim-speech-bubble hidden" id="sim-speech">
+                        Ayyo… veendum work aano?
+                    </div>
+                    <img src="sprites/cat_idle.png" alt="Kuttan" id="sim-cat-img" class="cat-sprite">
+                </div>
+
+                <div class="desktop-hint">💡 Click buttons above to open apps · Click Kuttan to pet him</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Dialogues Section ===== -->
+    <section id="dialogues" class="dialogue-section">
+        <div class="section-header">
+            <h2>🗣️ Kuttan's Manglish Dialogues</h2>
+            <p>Iconic Malayalam-English (Manglish) reactions for every situation</p>
+        </div>
+
+        <div class="dialogue-grid">
+            <div class="dialogue-card">
+                <div class="card-top">
+                    <div class="card-icon">😾</div>
+                    <h3>Productive App Opened</h3>
+                </div>
+                <ul>
+                    <li>Dont Play with me Nigeshhhh</li>
+                    <li>Nee thurakku… njan adakkam.</li>
+                    <li>Vendatta Venda</li>
+                </ul>
+                <button class="btn-speak" onclick="playQuote('PRODUCTIVE_OPENED')">🔊 Play Random Quote</button>
+            </div>
+
+            <div class="dialogue-card">
+                <div class="card-top">
+                    <div class="card-icon">🚶</div>
+                    <h3>Walking to Close</h3>
+                </div>
+                <ul>
+                    <li>Vannu njann 🐾</li>
+                    <li>Nice try. 😏</li>
+                </ul>
+                <button class="btn-speak" onclick="playQuote('GOING_TO_CLOSE')">🔊 Play Random Quote</button>
+            </div>
+
+            <div class="dialogue-card">
+                <div class="card-top">
+                    <div class="card-icon">✨</div>
+                    <h3>After Closing</h3>
+                </div>
+                <ul>
+                    <li>Aah… ippo correct.</li>
+                    <li>Problem solved. 😼</li>
+                    <li>You're welcome. 💅</li>
+                </ul>
+                <button class="btn-speak" onclick="playQuote('AFTER_CLOSING')">🔊 Play Random Quote</button>
+            </div>
+
+            <div class="dialogue-card">
+                <div class="card-top">
+                    <div class="card-icon">📱</div>
+                    <h3>Instagram / Reels</h3>
+                </div>
+                <ul>
+                    <li>Ada Gommale</li>
+                    <li>Oru reel kude kanaam 🎬</li>
+                    <li>Ingane Ingane cheyy Baalu 💖</li>
+                </ul>
+                <button class="btn-speak" onclick="playQuote('INSTAGRAM_OPENED')">🔊 Play Random Quote</button>
+            </div>
+
+            <div class="dialogue-card">
+                <div class="card-top">
+                    <div class="card-icon">🎬</div>
+                    <h3>Netflix / YouTube</h3>
+                </div>
+                <ul>
+                    <li>Now we're talking netflix. 😎</li>
+                    <li>Just one episode. 🍿</li>
+                    <li>Work pinne cheyyaam. 💤</li>
+                </ul>
+                <button class="btn-speak" onclick="playQuote('NETFLIX_OPENED')">🔊 Play Random Quote</button>
+            </div>
+
+            <div class="dialogue-card">
+                <div class="card-top">
+                    <div class="card-icon">🔁</div>
+                    <h3>Reopened Productive App</h3>
+                </div>
+                <ul>
+                    <li>Ayyo… pinneyum? 💢</li>
+                    <li>Ithu ippo personal aanu. 🔥😾</li>
+                </ul>
+                <button class="btn-speak" onclick="playQuote('REOPENED_PRODUCTIVE')">🔊 Play Random Quote</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Download Section ===== -->
+    <section id="download" class="download-section">
+        <div class="download-card">
+            <h2>⬇️ Download Kuttan for Windows</h2>
+            <p>Get the real desktop pet running natively on your Windows PC. Kuttan floats transparently over your desktop and actually closes your productive apps!</p>
+
+            <div class="download-actions">
+                <a href="kuttan-desktop-poocha.zip" class="btn-download-main" download>📦 Download ZIP</a>
+                <button id="btn-sound-toggle" class="btn-secondary">🔊 Sound ON</button>
+            </div>
+
+            <div class="setup-steps">
+                <h3>Quick Setup (3 Steps)</h3>
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <div class="step-content">
+                        <p>Unzip the downloaded file & open a terminal inside the folder</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <div class="step-content">
+                        <p>Install dependencies</p>
+                        <code class="code-inline">pip install pillow uiautomation comtypes</code>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <div class="step-content">
+                        <p>Generate sprites & run the pet</p>
+                        <code class="code-inline">python generate_assets.py</code>
+                        <br>
+                        <code class="code-inline" style="margin-top: 0.3rem;">python anti_workcat.py</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Tech Stack ===== -->
+    <section class="tech-section">
+        <div class="section-header">
+            <h2>🛠️ Built With</h2>
+        </div>
+        <div class="tech-grid">
+            <div class="tech-pill">🐍 Python 3</div>
+            <div class="tech-pill">🪟 Win32 API</div>
+            <div class="tech-pill">🤖 UI Automation</div>
+            <div class="tech-pill">🖼️ Pillow (PIL)</div>
+            <div class="tech-pill">🎨 Tkinter</div>
+            <div class="tech-pill">🔊 winsound / MCI</div>
+            <div class="tech-pill">🌐 HTML5 / CSS3</div>
+            <div class="tech-pill">⚡ Vanilla JavaScript</div>
+        </div>
+    </section>
+
+    <!-- ===== Footer ===== -->
+    <footer class="footer">
+        <p>Made with <span class="footer-heart">❤️</span> for <strong>TinkerHub Useless Projects 3.0</strong></p>
+        <p>Team <strong>TechHack</strong> — <a href="#">Vaishnavi P B</a> & <a href="#">Harsha Hari</a> · LBSITW</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

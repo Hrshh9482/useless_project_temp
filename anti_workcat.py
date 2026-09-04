@@ -278,9 +278,9 @@ class AntiWorkCatApp:
         self.screen_w = self.root.winfo_screenwidth()
         self.screen_h = self.root.winfo_screenheight()
         
-        # Initial Position (Bottom right of desktop)
-        self.cat_x = self.screen_w - 200
-        self.cat_y = self.screen_h - 220
+        # Initial Position (Bottom right of desktop, fully inside screen bounds)
+        self.cat_x = max(10, self.screen_w - 360)
+        self.cat_y = max(10, self.screen_h - 260)
         self.root.geometry(f"320x180+{int(self.cat_x)}+{int(self.cat_y)}")
         
         # Canvas Layout
